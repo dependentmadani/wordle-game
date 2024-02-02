@@ -1,4 +1,4 @@
-# LENDSTACK WORDLE
+# WORDLE GAME
 
 ## About
 
