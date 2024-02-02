@@ -9,9 +9,9 @@ Wordle is a popular word puzzle game that challenges players to guess a secret f
 - Make sure to have `Node.js` and `npm` already installed in your computer, otherwise you can check this [`link`](https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac) to explain how to install them. And please make sure to install typescript globally, to run typescript code as well, with the following command: `npm install -g typescript`.
 
 - Now, you can start by cloning the repository with the following command: 
-```git clone git@github.com:dependentmadani/lendstack-wordle.git -b wordle-madani```
+```git clone git@github.com:dependentmadani/wordle-game.git```
 
-- After that, you can enter the folder with `cd lendstack-wordle`. And run the following command to install all necessary modules to run the application `npm install` or simply `npm i`
+- After that, you can enter the folder with `cd wordle-game`. And run the following command to install all necessary modules to run the application `npm install` or simply `npm i`
 
 - Finally, you can run and start the application with `npm run dev`. A local url will be prompt to you in the terminal to access it. Have fun ✅.
 
