@@ -23,6 +23,7 @@ export default function Result(props: result) {
                     <hr />
                     <h2 className="font-black text-2xl pt-4">{resultGame}</h2>
                     <CloseIcon
+                        className="mr-4"
                         onClick={() => {
                         props.result("");
                         }}

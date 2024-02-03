@@ -1,9 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Square from "../Square";
-import words from "../../words";
 
-const correctWord = words[Math.floor(Math.random() * words.length - 1)].toUpperCase();
-let defaulBoard: Array<Array<Array<string>>> = new Array<Array<Array<string>>>();
+const getWord = await fetch('https://random-word-api.herokuapp.com/word?length=5')
+                          .then((response:any) => {
+                            const result = response.json()
+                            return result;
+                          });
+const correctWord = getWord[0].toUpperCase();
+let defaulBoard: any = new Array<Array<Array<string>>>();
 let defaultLetters: any = {};
 
 "abcdefghijklmnopqrstuvwxyz".split("").forEach((i: string) => {
@@ -36,71 +40,94 @@ export default function Table(props: table) {
   const [win, setWin] = useState(false);
   const [lost, setLost] = useState(false);
 
-  const modifyBoard = (revBoard: any) => {
-    if (col < 5) {
-      if (props.letter !== "ENTER") {
-        revBoard[row][col][0] = props.letter;
-        setCol(col + 1);
-      } else {
-        props.error("Words are 5 letters long!");
-        setTimeout(() => {
-          props.error("");
-        }, 1000);
-      }
-    } else {
-      if (props.letter === "ENTER") {
-        let correctLetters = 0;
-        let word = "";
-        for (let i = 0; i < 5; i++) {
-          word += revBoard[row][i][0];
-        }
-        if (words.includes(word.toLowerCase())) {
-          for (let i = 0; i < 5; i++) {
-            if (correctWord[i] === revBoard[row][i][0]) {
-              revBoard[row][i][1] = "C";
-              correctLetters++;
-            } else if (correctWord.includes(revBoard[row][i][0]))
-              revBoard[row][i][1] = "E";
-            else revBoard[row][i][1] = "W";
-            setRow(row + 1);
-            if (props.remain)
-              props.remain(5 - row);
-            if (row === 5) {
-              setLost(true);
-              setTimeout(() => {
-                props.result("lose");
-                props.correct(correctWord);
-              }, 750);
-            }
+  const checkWord = async (entry: string): Promise<boolean> => {
+    try {
+      return await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${entry}`)
+            .then((response) => {
+              if (!response.ok) {
+                if (response.status === 404) {
+                  throw new Error('Resource not found');
+                } else {
+                  throw new Error('Unexpected error occurred');
+                }
+              }
+              return response.json();
+            })
+            .then((data) => {
+              return true;
+            })
+    } catch (error) {
+      console.log('The word is not available! :(')
+    }
+    return false;
+  }
 
-            setCol(0);
-            setLetters((prev: any) => {
-              prev[board[row][i][0]] = board[row][i][1];
-              return prev;
-            });
-          }
-          setChanged(!changed);
-
-          if (correctLetters === 5) {
-            setWin(true);
-            setTimeout(() => {
-              props.result("win");
-              props.correct(correctWord);
-            }, 750);
-          }
-          return revBoard;
+  useEffect(() => {
+    const modifyBoard = async (revBoard: any) => {
+      if (col < 5) {
+        if (props.letter !== "ENTER") {
+          revBoard[row][col][0] = props.letter;
+          setCol(col + 1);
         } else {
-          props.error("Word not in dictionary");
+          props.error("Words are 5 letters long!");
           setTimeout(() => {
             props.error("");
           }, 1000);
         }
+      } else {
+        if (props.letter === "ENTER") {
+          let correctLetters = 0;
+          let word = "";
+          for (let i = 0; i < 5; i++) {
+            word += revBoard[row][i][0];
+          }
+          let result = await checkWord(word.toLowerCase());
+          if (result) {
+            for (let i = 0; i < 5; i++) {
+              if (correctWord[i] === revBoard[row][i][0]) {
+                revBoard[row][i][1] = "C";
+                correctLetters++;
+              } else if (correctWord.includes(revBoard[row][i][0]))
+                revBoard[row][i][1] = "E";
+              else revBoard[row][i][1] = "W";
+              setRow(row + 1);
+              if (props.remain)
+                props.remain(5 - row);
+              if (row === 5) {
+                setLost(true);
+                setTimeout(() => {
+                  props.result("lose");
+                  props.correct(correctWord);
+                }, 750);
+              }
+  
+              setCol(0);
+              setLetters((prev: any) => {
+                prev[board[row][i][0]] = board[row][i][1];
+                return prev;
+              });
+            }
+            setChanged(!changed);
+  
+            if (correctLetters === 5) {
+              setWin(true);
+              setTimeout(() => {
+                props.result("win");
+                props.correct(correctWord);
+              }, 750);
+            }
+            return revBoard;
+          } else {
+            props.error("Word not in dictionary");
+            setTimeout(() => {
+              props.error("");
+            }, 1000);
+          }
+        }
       }
+      return revBoard;
     }
-    return revBoard;
-  }
-
-  useEffect(() => {
+    
     if (win || lost) {
       console.log("Game ended!");
     } else {
@@ -112,7 +139,9 @@ export default function Table(props: table) {
             return revBoard;
           });
         } else {
-          setBoard(modifyBoard);
+          modifyBoard(board).then(value => {
+            setBoard(value)
+          });
         }
       }
     }

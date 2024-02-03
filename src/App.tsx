@@ -26,7 +26,6 @@ function App() {
     };
 
     useEffect( () => {
-      console.log('was here in the other place:', dark);
       darkMode(dark);
       setDark(dark)
     }, [dark]) 
