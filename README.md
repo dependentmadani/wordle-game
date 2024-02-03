@@ -6,7 +6,7 @@ Wordle is a popular word puzzle game that challenges players to guess a secret f
 
 ## Installation
 
-- Make sure to have `Node.js` and `npm` already installed in your computer, otherwise you can check this [`link`](https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac) to explain how to install them. And please make sure to install typescript globally, to run typescript code as well, with the following command: `npm install -g typescript`.
+- Make sure to have `Node.js` and `npm` already installed in your computer, otherwise you can check this [`link`](https://radixweb.com/blog/installing-npm-and-nodejs-on-windows-and-mac) that explain how to install them. And please make sure to install typescript globally, to run typescript code as well, with the following command: `npm install -g typescript`.
 
 - Now, you can start by cloning the repository with the following command: 
 ```git clone git@github.com:dependentmadani/wordle-game.git```

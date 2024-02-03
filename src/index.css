@@ -62,3 +62,8 @@ button:focus-visible {
   color: rgb(226 232 240);
   background-color: rgb(30, 41, 59);
 }
+
+.light {
+  color: rgb(30, 41, 59);
+  background-color: rgb(226 232 240);
+}

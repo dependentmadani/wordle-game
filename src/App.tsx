@@ -16,17 +16,27 @@ function App() {
 
     const darkMode = (darkPosition: boolean) => {
       if (darkPosition) {
+        document.documentElement.classList.remove('light')
         document.documentElement.classList.add("dark");
       }
       else {
+        document.documentElement.classList.add("light");
         document.documentElement.classList.remove("dark");
       }
     };
 
     useEffect( () => {
+      console.log('was here in the other place:', dark);
       darkMode(dark);
       setDark(dark)
     }, [dark]) 
+    
+    useEffect(() => {
+      let mediaQueryObj = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mediaQueryObj.matches) {
+        setDark(true);
+      }
+    }, [])
 
     return (
       <div className={'app dark:bg-slate-800'}>
