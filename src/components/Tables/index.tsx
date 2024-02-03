@@ -1,12 +1,15 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Square from "../Square";
 
-const getWord = await fetch('https://random-word-api.herokuapp.com/word?length=5')
-                          .then((response:any) => {
-                            const result = response.json()
-                            return result;
-                          });
-const correctWord = getWord[0].toUpperCase();
+let getWord: any = [];
+let correctWord: any;
+(async () => {
+  const getWordResponse = await fetch('https://random-word-api.herokuapp.com/word?length=5');
+  getWord = await getWordResponse.json();
+  // Rest of your code using 'getWord'
+  correctWord = await getWord[0].toUpperCase();
+})();
+
 let defaulBoard: any = new Array<Array<Array<string>>>();
 let defaultLetters: any = {};
 
@@ -53,7 +56,7 @@ export default function Table(props: table) {
               }
               return response.json();
             })
-            .then((data) => {
+            .then(() => {
               return true;
             })
     } catch (error) {
